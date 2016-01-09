@@ -1,8 +1,9 @@
 package com.example.android.sunshine.app;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ForecastFragment())
                     .commit();
         }
     }
@@ -57,88 +58,4 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        ArrayAdapter<String> mForecastAdapter;
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            String[] data = {
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Mon 6/23 - Sunny - 31/17",
-            };
-            ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-            mForecastAdapter = new ArrayAdapter<String>(getActivity(),
-                    R.layout.list_item_forrcaset,
-                    R.id.list_item_forecast_textview,
-                    weekForecast);
-            ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-            listView.setAdapter(mForecastAdapter);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //进行网络请求
-                    HttpURLConnection connection = null;
-                    String url = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Chengdu,cn&mode=json&units=metric&cnt=7&appid=2de143494c0b295cca9337e1e96b00e0";
-                    BufferedReader reader = null;
-                    try {
-                        URL forecastUrl = new URL(url);
-                        connection = (HttpURLConnection) forecastUrl.openConnection();
-                        connection.setRequestMethod("GET");
-                        connection.connect();
-
-                        // 读取ins
-                        InputStream ins = connection.getInputStream();
-                        StringBuffer stringBuffer = new StringBuffer();
-                        if (ins == null){
-                            return;
-                        }
-                        reader = new BufferedReader(new InputStreamReader(ins));
-                        String line;
-
-                        while ((line = reader.readLine()) != null){
-                            stringBuffer.append("/n");
-                        }
-
-                        if (stringBuffer.length() == 0){
-                            return ;
-                        }
-
-                        String forecastStr = stringBuffer.toString();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (connection != null){
-                            connection.disconnect();
-                        }
-
-                        if (reader != null){
-                            try {
-                                reader.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }).run();
-
-            return rootView;
-        }
-    }
 }
