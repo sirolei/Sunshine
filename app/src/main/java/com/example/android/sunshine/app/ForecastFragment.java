@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,9 +24,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ForecastFragment extends Fragment {
+    private final String TAG = ForecastFragment.class.getSimpleName();
     ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -111,6 +121,33 @@ public class ForecastFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.i(LOG_TAG, "receive data is : " + s);
+            getActivity().invalidateOptionsMenu();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.forecast, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_refesh:
+                Log.i(TAG, "option refresh click");
+                return true;
+            default:
+                return  super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (menu.findItem(R.id.action_refesh) == null){
+            MenuItem item = menu.add(1, R.id.action_refesh, 9,getResources().getString(R.string.action_refesh));
+        }
+        super.onPrepareOptionsMenu(menu);
     }
 }

@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +51,19 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                Log.i(LOG_TAG, "options setings click");
+                return true;
+            case R.id.action_location:
+                Log.i(LOG_TAG, "options location click");
+                return true;
+//            case R.id.action_refesh:
+//                Log.i(LOG_TAG, "options refresh click");
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }
