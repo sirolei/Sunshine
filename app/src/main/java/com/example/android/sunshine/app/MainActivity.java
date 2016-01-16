@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -36,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -53,17 +56,23 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_settings:
-                Log.i(LOG_TAG, "options setings click");
+                startActivity(new Intent(this, SettingActivity.class));
                 return true;
-            case R.id.action_location:
-                Log.i(LOG_TAG, "options location click");
-                return true;
+//            case R.id.action_location:
+//                Log.i(LOG_TAG, "options location click");
+//                return true;
 //            case R.id.action_refesh:
 //                Log.i(LOG_TAG, "options refresh click");
 //                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private String getSongsFound(int count){
+        String songsFound = getResources().getQuantityString(R.plurals.numberOfSongsAvailable, count, count);
+        Log.v(LOG_TAG, "songsFound is " + songsFound);
+        return songsFound;
     }
 
 }
